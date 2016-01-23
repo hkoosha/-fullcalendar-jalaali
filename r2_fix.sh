@@ -25,28 +25,39 @@
 source r0_config.sh || exit 77
 source r1_check.sh || exit 77
 WORKING_DIR="$RZ_PATH/$RZ_MPOINT"
-WORKING_IMG="$WORKING_IMG"
+WORKING_IMG="$RZ_PATH/$RZ_RASBPIAN_IMG"
 
 ## mounting needs root
 rz_check_root
 
-echo "mount offset: $RZ_MOUNT_OFFSET"
-echo "image: $WORKING_IMG"
-echo "mount point: $WORKING_DIR"
+echo -e "mount offset: $RZ_MOUNT_OFFSET -> this number is hardcoded for the image."
+echo -e "If the image is changed, offset must be re-calculated. read more at the wiki"
+echo -e "image: $WORKING_IMG"
+echo -e "mount point: $WORKING_DIR"
+echo -e ""
+echo -e "!!! ATTENTION !!!"
+echo -e "removing and re-creating $WORKING_DIR"
+echo -e "you have 2 seconds to cancel..."
+sleep 1
+echo -e "you have 1 seconds to cancel..."
+sleep 1
 
-echo "!!! ATTENTION !!!"
-echo "removing and re-creating $WORKING_DIR, you have 2 seconds to cancel..."
-sleep 2
-
-rm -rf $WORKING_DIR
-mkdir $WORKING_DIR
+rm -rf "$WORKING_DIR"
+mkdir "$WORKING_DIR"
 
 echo "mounting image"
+echo "mount -v
+    -o offset=$RZ_MOUNT_OFFSET
+    -t ext4
+    $WORKING_IMG
+    $WORKING_DIR
+"
+
 mount -v \
     -o offset=$RZ_MOUNT_OFFSET \
     -t ext4 \
     "$WORKING_IMG" \
-    $WORKING_DIR  || rz_exit "could not mount image"
+    "$WORKING_DIR"  || rz_exit "could not mount image"
 
 [[ -f "$WORKING_DIR/etc/ld.so.preload" ]] || rz_exit "ld.so.preload file not found, did the mount go alright?"
 [[ -f "$WORKING_DIR/etc/fstab" ]] || rz_exit "fstab file not found, did the mount go alright?"
@@ -56,5 +67,7 @@ sed -e '/.*libarmmem.so.*/ s/^#*/#/' -i "$WORKING_DIR/etc/ld.so.preload" || rz_e
 sed -e '/.*\/dev\/mmcblk.*/ s/^#*/#/' -i "$WORKING_DIR/etc/fstab" || rz_exit "could not fix fstab file"
 
 echo "done fixing, un-mounting the image"
-umount $WORKING_DIR || rz_exit "could not unmount image"
+echo -e "you have 1 seconds to cancel unmount if image needs furthur investigation"
+sleep 1
+umount "$WORKING_DIR" || rz_exit "could not unmount image"
 

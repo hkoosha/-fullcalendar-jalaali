@@ -15,45 +15,52 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-echo "based on kernel and tutorial on https://github.com/dhruvvyas90/qemu-rpi-kernel/wiki/Emulating-Jessie-image-with-4.1.7-kernel"
+echo -e "\nBased on work (kernel and tutorial) available on:"
+echo -e "http://github.com/dhruvvyas90/qemu-rpi-kernel/wiki/Emulating-Jessie-image-with-4.1.7-kernel"
+echo -e "By loolooyyyy, script available on:"
+echo -e "http://github.com/loolooyyyy/rassbpery-qemu"
 
 function rz_exit() {
   if [[ -z $1 ]]; then 
+      echo -e ""
       exit 0
   else
       echo $1;
+      echo -e ""
       exit 127;
   fi
 }
 
-
-function rz_run() {
-
-    if [[ $1 -eq "fix" ]]; then
-        source source r2_fix.sh || exit 7
-
-    elif [[ $1 -eq "run" ]]; then
-        source source r2_fix.sh || exit 7;
-
-    elif [[ $1 -eq "dl" ]]; then
-        source r2_kernel_dl.sh || exit 7;
-    else
-        echo "unknown command: $1"
-        exit 33
-    fi
-
+function rz_usage() {
+    echo -e ""
+    echo -e "usage: $0 [arg]"
+    echo -e ""
+    echo -e "Arg:"
+    echo -e "\tall (runs all steps below in proper order"
+    echo -e "\tdl (downloads the proper kernel)"
+    echo -e "\tfix (fixes the downloaded image. does NOT download the image)"
+    echo -e "\trun (runs the qemu instace)"
+    echo -e ""
+    rz_exit $1
 }
 
-if [[ -z $1 ]]; then
-    echo "usage: $0 [arg]"
-    echo "Arg:"
-    echo "\tall (runs all steps below in proper order"
-    echo "\tdl (downloads the proper kernel)"
-    echo "\tfix (fixes the downloaded image. does NOT download the image)"
-    echo "\trun (runs the qemu instace)"
-fi
+function rz_run() {
+    if [[ $1 == "fix" ]]; then
+        source r2_fix.sh || rz_exit "r2_fix.sh failed"
+    elif [[ $1 == "run" ]]; then
+        source r2_qemu.sh || rz_exit "r2_qemu.sh failed"
+    elif [[ $1 == "dl" ]]; then
+        source r2_kernel_dl.sh || rz_exit "r2_kernel_dl.sh failed"
+    else
+        rz_usage "unkown command: $1"
+    fi
+}
 
-if [[ $1 -eq "all" ]]; then
+
+if [[ -z $1 ]]; then
+    rz_usage
+elif [[ "$1" == "all" ]]; then
+    echo "running dl, fix, run in order"
     rz_run dl
     rz_run fix
     rz_run run

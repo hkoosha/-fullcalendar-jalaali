@@ -20,24 +20,39 @@
 
 source r0_config.sh || exit 77
 source r1_check.sh || exit 77
-$RZ_KERNEL_F="$RZ_PATH/$RZ_KERNEL"
-$RZ_IMG_F="$RZ_PATH/$RZ_RASBPIAN_IMG"
+RZ_KERNEL_F="$RZ_PATH/$RZ_KERNEL"
+RZ_IMG_F="$RZ_PATH/$RZ_RASBPIAN_IMG"
 
-echo "running image"
+echo -e "\n\n"
 echo "kernel: $RZ_KERNEL_F"
 echo "cpu: $RZ_CPU"
 echo "mem: $RZ_MEM"
 echo "kernel append line: $RZ_APPEND"
 echo "image: $RZ_IMG_F"
 
+echo "
+qemu-system-arm
+    -kernel $RZ_KERNEL_F
+    -cpu $RZ_CPU
+    -m $RZ_MEM
+    -M versatilepb
+    -no-reboot
+    -no-shutdown
+    -serial stdio
+    -append \"$RZ_APPEND\"
+    -hda $RZ_IMG_F
+"
+
+
+echo -e "\n\n"
 qemu-system-arm \
-    -kernel $RZ_KERNEL_F \
+    -kernel "$RZ_KERNEL_F" \
     -cpu $RZ_CPU \
     -m $RZ_MEM \
     -M versatilepb \
     -no-reboot \
     -no-shutdown \
     -serial stdio \
-    -append $RZ_APPEND \
-    -hda $RZ_IMG_F
+    -append "$RZ_APPEND" \
+    -hda "$RZ_IMG_F"
 
