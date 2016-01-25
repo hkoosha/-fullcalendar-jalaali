@@ -17,9 +17,16 @@ All the configurable options are available in the `r0_config.sh` file.
 
 ### Usage
 
+The image must be downloaded manually and put in the script directory. As of writing this readme the lastest image is `2015-11-21-raspbian-jessie.img` available at [https://www.raspberrypi.org/downloads/raspbian/](https://www.raspberrypi.org/downloads/raspbian/). Download the zip file and extract it. The kernel will be downloaded by the script.
+
 ```bash
 bash$ ./r3_run.sh # prints usage
 bash$ ./r3_run.sh dl # downloads the custom kernel
 bash$ sudo ./r3_run.sh fix # fix the image file by mouting and modifying the files
 bash$ ./r3_run.sh run # run the qemu instance
 ```
+
+### To do
+- don't donwload the kernel if it already is.
+- download the image.
+- check for the lastest image and kernel (do not hardcode in the config).
