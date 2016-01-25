@@ -2,7 +2,7 @@
 
 Run a Raspbian image on qemu. To run raspbian, some modifications are needed, the most important is the need for a custom kernel. Also qemu has some bugs emulating ARM cpus (the ram limit). This script takes care of downloading the custom kernel, modifying the image, and running the qemu instance.
 
-based on https://github.com/dhruvvyas90/qemu-rpi-kernel/wiki/Emulating-Jessie-image-with-4.1.7-kernel
+based on https://github.com/dhruvvyas90/qemu-rpi-kernel. Also have a look at the [wiki](https://github.com/dhruvvyas90/qemu-rpi-kernel/wiki/Emulating-Jessie-image-with-4.1.7-kernel).
 
 ### Supported environments
 
