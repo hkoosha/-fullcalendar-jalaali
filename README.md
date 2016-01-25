@@ -4,7 +4,7 @@ Run a Raspbian image on qemu. To run raspbian, some modifications are needed, th
 
 based on https://github.com/dhruvvyas90/qemu-rpi-kernel/wiki/Emulating-Jessie-image-with-4.1.7-kernel
 
-## Supported environments
+### Supported environments
 
 Works **only** on posix compliant systems! 
 MS-Windows is NOT supported and there is no plan to do so. Cygwin is not tested.
